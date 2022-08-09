@@ -106,7 +106,8 @@ object GithubDependencyGraphPlugin extends AutoPlugin {
     val scalaBinaryVersion = (Keys.artifactName / Keys.scalaBinaryVersion).value
     val crossVersion = CrossVersion.apply(scalaVersion, scalaBinaryVersion)
     val allDirectDependencies = Keys.allDependencies.value
-    val ignoredDependencies = Keys.state.value.attributes(githubSubmitInputKey).ignoredDependencies
+    val ignoredDependencies = Keys.state.value.attributes.get(githubSubmitInputKey)
+      .fold(Vector.empty[Dependency])(_.ignoredDependencies)
     val baseDirectory = Keys.baseDirectory.value
     val logger = Keys.streams.value.log
     val onResolveFailure = Keys.state.value.get(githubSubmitInputKey).flatMap(_.onResolveFailure)
